@@ -4,6 +4,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -37,13 +39,25 @@ private ArrayList<Name> listOfNames;
 }
 
     @GetMapping("/names/frequency")
-public int getFrequency(@RequestParam String name) {
+    public int getFrequency(@RequestParam String name) {
     int frequency = listOfNames.stream()
             .filter(entry -> entry.getName().equalsIgnoreCase(name))
             .mapToInt(Name::getAnzahl)
             .sum();
     return frequency;
 }
+
+    @GetMapping("/names/name")
+    public List<String> filterNames(@RequestParam String sex, @RequestParam String start,
+            @RequestParam int length) {
+        List<String> names = listOfNames.stream()
+                .filter(x -> x.getName().startsWith(start))
+                .filter(x -> x.getName().length() == length)
+                .filter(x -> x.getGeschlecht().equals(sex))
+                .map(x -> x.getName())
+                .collect(Collectors.toList());
+        return names;
+    }
 
 
     @EventListener(ApplicationReadyEvent.class) public void runAfterStartup() throws Exception {
