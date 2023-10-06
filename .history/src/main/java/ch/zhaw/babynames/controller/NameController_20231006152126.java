@@ -40,7 +40,7 @@ private ArrayList<Name> listOfNames;
 }
 
     @GetMapping("/names/frequency")
-public int getFrequency(@RequestParam String name) {
+    public int getFrequency(@RequestParam String name) {
     int frequency = listOfNames.stream()
             .filter(entry -> entry.getName().equalsIgnoreCase(name))
             .mapToInt(Name::getAnzahl)
@@ -48,7 +48,7 @@ public int getFrequency(@RequestParam String name) {
     return frequency;
 }
 
- @GetMapping("/names/name")
+   @GetMapping("/names/name")
     public ResponseEntity<List<String>> filterNames(
             @RequestParam String sex,
             @RequestParam String start,

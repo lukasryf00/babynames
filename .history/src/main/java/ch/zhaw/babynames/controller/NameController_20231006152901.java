@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,7 +39,7 @@ private ArrayList<Name> listOfNames;
 }
 
     @GetMapping("/names/frequency")
-public int getFrequency(@RequestParam String name) {
+    public int getFrequency(@RequestParam String name) {
     int frequency = listOfNames.stream()
             .filter(entry -> entry.getName().equalsIgnoreCase(name))
             .mapToInt(Name::getAnzahl)
@@ -48,33 +47,17 @@ public int getFrequency(@RequestParam String name) {
     return frequency;
 }
 
- @GetMapping("/names/name")
-    public ResponseEntity<List<String>> filterNames(
-            @RequestParam String sex,
-            @RequestParam String start,
+    @GetMapping("/names/name")
+    public List<String> filterNames(@RequestParam String sex, @RequestParam String start,
             @RequestParam int length) {
-
-        // Überprüfen Sie die Parameter auf Gültigkeit
-        if (!isValidSex(sex) || start.isEmpty() || length <= 0) {
-            // Wenn die Parameter ungültig sind, geben Sie einen 400 Bad Request zurück
-            return ResponseEntity.badRequest().build();
-        }
-
         List<String> names = listOfNames.stream()
                 .filter(x -> x.getName().startsWith(start))
                 .filter(x -> x.getName().length() == length)
                 .filter(x -> x.getGeschlecht().equals(sex))
                 .map(x -> x.getName())
                 .collect(Collectors.toList());
-
-        return ResponseEntity.ok(names);
+        return names;
     }
-
-    // Überprüfen Sie die Gültigkeit des Geschlechts
-    private boolean isValidSex(String sex) {
-        return sex.equals("male") || sex.equals("female");
-    }
-
 
 
     @EventListener(ApplicationReadyEvent.class) public void runAfterStartup() throws Exception {
