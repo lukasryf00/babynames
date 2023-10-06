@@ -46,6 +46,8 @@ public int getFrequency(@RequestParam String name) {
 }
 
 
+
+
     @EventListener(ApplicationReadyEvent.class) public void runAfterStartup() throws Exception {
     listOfNames = new ArrayList<>();
     Path path = Paths.get(ClassLoader.getSystemResource("data/babynames.csv").toURI()); System.out.println("Read from: " + path);
